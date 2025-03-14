@@ -8,9 +8,16 @@
           <h5>KY026 Flama Sensor</h5>
         </div>
         <div class="card-body">
-          <p>Status: Desconocido</p>
-          <p>Last updated: -</p>
-          <a routerLink="/sensors/ky026" class="btn btn-primary">Control</a>
+          <p>Status: <span [ngClass]="ky026Status === 1 ? 'text-danger fw-bold' : 'text-success'">{{ getKY026StatusText() }}</span></p>
+          <div class="mb-3">
+            <a routerLink="/sensors/ky026" class="btn btn-primary">Control</a>
+          </div>
+          <!-- Simulation Buttons -->
+          <div class="mt-3">
+            <p><small>Simulation controls:</small></p>
+            <button (click)="simulateKY026Alarm()" class="btn btn-danger btn-sm me-2">Simulate Alarm</button>
+            <button (click)="simulateKY026Normal()" class="btn btn-success btn-sm">Simulate Normal</button>
+          </div>
         </div>
       </div>
     </div>
@@ -21,9 +28,16 @@
           <h5>MQ2 Gas Sensor</h5>
         </div>
         <div class="card-body">
-          <p>Status: Desconocido</p>
-          <p>Last updated: -</p>
-          <a routerLink="/sensors/mq2" class="btn btn-primary">Control</a>
+          <p>Status: <span [ngClass]="mq2Status === 1 ? 'text-danger fw-bold' : 'text-success'">{{ getMQ2StatusText() }}</span></p>
+          <div class="mb-3">
+            <a routerLink="/sensors/mq2" class="btn btn-primary">Control</a>
+          </div>
+          <!-- Simulation Buttons -->
+          <div class="mt-3">
+            <p><small>Simulation controls:</small></p>
+            <button (click)="simulateMQ2Alarm()" class="btn btn-danger btn-sm me-2">Simulate Alarm</button>
+            <button (click)="simulateMQ2Normal()" class="btn btn-success btn-sm">Simulate Normal</button>
+          </div>
         </div>
       </div>
     </div>

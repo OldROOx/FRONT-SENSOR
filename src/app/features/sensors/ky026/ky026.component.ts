@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SensorService } from '../sensor.service';
 
@@ -8,7 +8,7 @@ import { SensorService } from '../sensor.service';
   templateUrl: './ky026.component.html',
   styleUrl: './ky026.component.css'
 })
-export class Ky026Component {
+export class Ky026Component implements OnInit {
 
   sensorForm: FormGroup;
   isSubmitting = false;
@@ -24,26 +24,35 @@ export class Ky026Component {
     });
   }
 
+  ngOnInit(): void {
+    // Component initialization logic
+  }
+
   onSubmit(): void {
     if (this.sensorForm.invalid || this.isSubmitting) {
       return;
     }
 
     this.isSubmitting = true;
-    const estado = this.sensorForm.get('estado')?.value;
+    this.message = '';
+
+    const estado = parseInt(this.sensorForm.get('estado')?.value);
+
+    console.log('Sending KY026 reading:', estado);
 
     this.sensorService.sendKY026Reading(estado).subscribe({
-      next: () => {
+      next: (response) => {
+        console.log('KY026 response:', response);
         this.message = 'KY026 reading sent successfully';
         this.messageType = 'success';
         this.isSubmitting = false;
       },
       error: (err) => {
-        this.message = 'Error sending reading: ' + (err.error?.error || 'Unknown error');
+        console.error('Error sending KY026 reading:', err);
+        this.message = 'Error sending reading: ' + (err.error?.error || err.message || 'Unknown error');
         this.messageType = 'danger';
         this.isSubmitting = false;
       }
     });
   }
-
 }

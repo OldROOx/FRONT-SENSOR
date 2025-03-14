@@ -21,7 +21,7 @@ body {
 
 /* Navegación */
 .navbar {
-  background-color: #3f51b5;
+  background-color: #000000;
   color: white;
   padding: 1rem;
 }
@@ -128,7 +128,7 @@ p {
 }
 
 .btn-primary {
-  background-color: #3f51b5;
+  background-color: #0202ff;
   color: white;
 }
 

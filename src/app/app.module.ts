@@ -13,6 +13,7 @@ import { SharedModule } from './shared/shared.module';
   ],
   imports: [
     BrowserModule,
+    HttpClientModule, // Ensure this is properly imported
     AppRoutingModule,
     DashboardModule,
     SensorsModule,

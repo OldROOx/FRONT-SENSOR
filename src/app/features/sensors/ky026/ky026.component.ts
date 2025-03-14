@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SensorService } from '../sensor.service';
+import { KY026 } from '../../../core/models/sensor.model';
 
 @Component({
   selector: 'app-ky026',
@@ -9,11 +10,15 @@ import { SensorService } from '../sensor.service';
   styleUrl: './ky026.component.css'
 })
 export class Ky026Component implements OnInit {
-
   sensorForm: FormGroup;
   isSubmitting = false;
   message = '';
   messageType = '';
+
+  // Readings history
+  readings: KY026[] = [];
+  loading = false;
+  error = '';
 
   constructor(
     private fb: FormBuilder,
@@ -25,7 +30,24 @@ export class Ky026Component implements OnInit {
   }
 
   ngOnInit(): void {
-    // Component initialization logic
+    this.loadReadings();
+  }
+
+  loadReadings(): void {
+    this.loading = true;
+    this.error = '';
+
+    this.sensorService.getAllKY026Readings().subscribe({
+      next: (data) => {
+        this.readings = data;
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error loading KY026 readings:', err);
+        this.error = 'Failed to load sensor history';
+        this.loading = false;
+      }
+    });
   }
 
   onSubmit(): void {
@@ -46,6 +68,9 @@ export class Ky026Component implements OnInit {
         this.message = 'KY026 reading sent successfully';
         this.messageType = 'success';
         this.isSubmitting = false;
+
+        // Reload readings after successfully sending new data
+        this.loadReadings();
       },
       error: (err) => {
         console.error('Error sending KY026 reading:', err);
@@ -54,5 +79,9 @@ export class Ky026Component implements OnInit {
         this.isSubmitting = false;
       }
     });
+  }
+
+  getStatusText(estado: number): string {
+    return this.sensorService.getKY026StatusText(estado);
   }
 }

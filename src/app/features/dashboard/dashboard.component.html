@@ -1,22 +1,70 @@
 <div class="container mt-4">
   <h1>Sensor Monitoring Dashboard</h1>
+  <button (click)="loadSensorData()" class="btn btn-info mb-3">
+    <i class="fas fa-sync-alt"></i> Refresh Data
+  </button>
 
   <div class="row mt-4">
     <div class="col-md-6">
       <div class="card mb-4">
         <div class="card-header">
-          <h5>KY026 Flama Sensor</h5>
+          <h5>KY026 Flame Sensor</h5>
         </div>
         <div class="card-body">
-          <p>Status: <span [ngClass]="ky026Status === 1 ? 'text-danger fw-bold' : 'text-success'">{{ getKY026StatusText() }}</span></p>
-          <div class="mb-3">
-            <a routerLink="/sensors/ky026" class="btn btn-primary">Control</a>
+          <div *ngIf="loadingKY026" class="text-center mb-3">
+            <p>Loading data...</p>
           </div>
-          <!-- Simulation Buttons -->
-          <div class="mt-3">
-            <p><small>Simulation controls:</small></p>
-            <button (click)="simulateKY026Alarm()" class="btn btn-danger btn-sm me-2">Simulate Alarm</button>
-            <button (click)="simulateKY026Normal()" class="btn btn-success btn-sm">Simulate Normal</button>
+
+          <div *ngIf="errorKY026" class="alert alert-danger">
+            {{ errorKY026 }}
+          </div>
+
+          <div *ngIf="!loadingKY026 && !errorKY026">
+            <p>Current Status:
+              <span [ngClass]="ky026Status === 1 ? 'text-danger fw-bold' : 'text-success'">
+                {{ getKY026StatusText() }}
+              </span>
+            </p>
+
+            <p *ngIf="latestKY026">
+              Last updated: {{ latestKY026.fecha_activacion }}
+            </p>
+
+            <div class="mb-3">
+              <a routerLink="/sensors/ky026" class="btn btn-primary">Control</a>
+            </div>
+
+            <!-- Last 5 readings -->
+            <div class="mt-3" *ngIf="ky026Readings && ky026Readings.length > 0">
+              <h6>Recent Readings:</h6>
+              <div class="table-responsive">
+                <table class="table table-sm">
+                  <thead>
+                  <tr>
+                    <th>Time</th>
+                    <th>Status</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let reading of ky026Readings.slice(0, 5)">
+                    <td>{{ reading.fecha_activacion }}</td>
+                    <td>
+                        <span [ngClass]="reading.estado === 1 ? 'text-danger' : 'text-success'">
+                          {{ reading.estado === 1 ? 'Flame Detected' : 'No Flame' }}
+                        </span>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Simulation Buttons -->
+            <div class="mt-3">
+              <p><small>Simulation controls:</small></p>
+              <button (click)="simulateKY026Alarm()" class="btn btn-danger btn-sm me-2">Simulate Alarm</button>
+              <button (click)="simulateKY026Normal()" class="btn btn-success btn-sm">Simulate Normal</button>
+            </div>
           </div>
         </div>
       </div>
@@ -28,15 +76,60 @@
           <h5>MQ2 Gas Sensor</h5>
         </div>
         <div class="card-body">
-          <p>Status: <span [ngClass]="mq2Status === 1 ? 'text-danger fw-bold' : 'text-success'">{{ getMQ2StatusText() }}</span></p>
-          <div class="mb-3">
-            <a routerLink="/sensors/mq2" class="btn btn-primary">Control</a>
+          <div *ngIf="loadingMQ2" class="text-center mb-3">
+            <p>Loading data...</p>
           </div>
-          <!-- Simulation Buttons -->
-          <div class="mt-3">
-            <p><small>Simulation controls:</small></p>
-            <button (click)="simulateMQ2Alarm()" class="btn btn-danger btn-sm me-2">Simulate Alarm</button>
-            <button (click)="simulateMQ2Normal()" class="btn btn-success btn-sm">Simulate Normal</button>
+
+          <div *ngIf="errorMQ2" class="alert alert-danger">
+            {{ errorMQ2 }}
+          </div>
+
+          <div *ngIf="!loadingMQ2 && !errorMQ2">
+            <p>Current Status:
+              <span [ngClass]="mq2Status === 1 ? 'text-danger fw-bold' : 'text-success'">
+                {{ getMQ2StatusText() }}
+              </span>
+            </p>
+
+            <p *ngIf="latestMQ2">
+              Last updated: {{ latestMQ2.fecha_activacion }}
+            </p>
+
+            <div class="mb-3">
+              <a routerLink="/sensors/mq2" class="btn btn-primary">Control</a>
+            </div>
+
+            <!-- Last 5 readings -->
+            <div class="mt-3" *ngIf="mq2Readings && mq2Readings.length > 0">
+              <h6>Recent Readings:</h6>
+              <div class="table-responsive">
+                <table class="table table-sm">
+                  <thead>
+                  <tr>
+                    <th>Time</th>
+                    <th>Status</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let reading of mq2Readings.slice(0, 5)">
+                    <td>{{ reading.fecha_activacion }}</td>
+                    <td>
+                        <span [ngClass]="reading.estado === 1 ? 'text-danger' : 'text-success'">
+                          {{ reading.estado === 1 ? 'Gas Detected' : 'No Gas' }}
+                        </span>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Simulation Buttons -->
+            <div class="mt-3">
+              <p><small>Simulation controls:</small></p>
+              <button (click)="simulateMQ2Alarm()" class="btn btn-danger btn-sm me-2">Simulate Alarm</button>
+              <button (click)="simulateMQ2Normal()" class="btn btn-success btn-sm">Simulate Normal</button>
+            </div>
           </div>
         </div>
       </div>
